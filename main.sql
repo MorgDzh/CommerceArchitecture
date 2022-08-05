@@ -47,9 +47,9 @@ DROP SEQUENCE SQ_tb_order_type;
 CREATE TABLE tb_client (
     id                              INTEGER
   , first_name_v                    VARCHAR2(200)
-  , birth_date_d                    DATE
-  , gender_id                       INTEGER(4)
-  , nationality_id                  VARCHAR2(200)
+  , birth_date_d                    INTEGER
+  , gender_id                       INTEGER
+  , nationality_id                  INTEGER
   , birth_place_id                  INTEGER
   , second_name_v                   VARCHAR2(200)
   , surname_v                       VARCHAR2(200)
@@ -59,7 +59,7 @@ CREATE TABLE tb_client (
 
 COMMENT ON TABLE  tb_client                                 IS 'Table for storing clients';
 
-CREATE SEQUENCE SQ_tb_client;
+CREATE SEQUENCE SQ_tb_two_client;
 
 CREATE OR REPLACE TRIGGER TG_tb_client_BI
     BEFORE INSERT ON tb_client
@@ -70,6 +70,7 @@ BEGIN
     end if;
 END;
 /
+
 
 
 -------------------------------------------------------------------------------
@@ -88,7 +89,7 @@ CREATE TABLE tb_address (
   , CONSTRAINT PK_tb_address PRIMARY KEY ( id )
 );
 
-COMMENT ON TABLE  tb_address                                 IS 'Address table';
+COMMENT ON TABLE  tb_address                                 IS 'Address Table';
 
 CREATE SEQUENCE SQ_tb_address;
 
@@ -102,8 +103,6 @@ BEGIN
 END;
 /
 
-
-
 -------------------------------------------------------------------------------
 --            tb_address_type
 -------------------------------------------------------------------------------
@@ -114,7 +113,7 @@ CREATE TABLE tb_address_type (
   , CONSTRAINT PK_tb_address_type PRIMARY KEY ( id )
 );
 
-COMMENT ON TABLE  tb_address_type                                 IS 'Table of address types';
+COMMENT ON TABLE  tb_address_type                                 IS 'Table of address types ';
 
 CREATE SEQUENCE SQ_tb_address_type;
 
@@ -184,33 +183,6 @@ END;
 /
 
 
-
--------------------------------------------------------------------------------
---            tb_address_type
--------------------------------------------------------------------------------
-
-CREATE TABLE tb_address_type (
-    id                              INTEGER
-  , name                            VARCHAR2(200)
-  , CONSTRAINT PK_tb_address_type PRIMARY KEY ( id )
-);
-
-COMMENT ON TABLE  tb_address_type                                 IS 'Table of address types';
-
-CREATE SEQUENCE SQ_tb_address_type;
-
-CREATE OR REPLACE TRIGGER TG_tb_address_type_BI
-    BEFORE INSERT ON tb_address_type
-    FOR EACH ROW
-BEGIN
-    if :NEW.id is NULL then
-        :NEW.id := SQ_tb_address_type.nextVal;
-    end if;
-END;
-/
-
-
-
 -------------------------------------------------------------------------------
 --            tb_gender
 -------------------------------------------------------------------------------
@@ -272,7 +244,7 @@ CREATE TABLE tb_stuff (
   , surname_v                       VARCHAR2(200)
   , salary_n                        INTEGER
   , position_id                     INTEGER
-  , CONSTRAINT PK_tb_stuff PRIMARY KEY ( id )
+  , CONSTRAINT PK_two_tb_stuff PRIMARY KEY ( id )
 );
 
 COMMENT ON TABLE  tb_stuff                                 IS 'Table stuff';
@@ -298,10 +270,10 @@ END;
 CREATE TABLE tb_position (
     id                              INTEGER
   , name_v                          VARCHAR2(200)
-  , CONSTRAINT PK_tb_position PRIMARY KEY ( id )
+  , CONSTRAINT PK_two_tb_position PRIMARY KEY ( id )
 );
 
-COMMENT ON TABLE  tb_position                                 IS 'Position stuff';
+COMMENT ON TABLE  tb_position                                 IS 'Position Stuff';
 
 CREATE SEQUENCE SQ_tb_position;
 
@@ -328,7 +300,7 @@ CREATE TABLE tb_product (
   , CONSTRAINT PK_tb_product PRIMARY KEY ( id )
 );
 
-COMMENT ON TABLE  tb_product                                 IS 'Product table';
+COMMENT ON TABLE  tb_product                                 IS 'Product Table';
 
 CREATE SEQUENCE SQ_tb_product;
 
@@ -354,10 +326,10 @@ CREATE TABLE tb_order (
   , quantity_n                      INTEGER
   , product_id                      INTEGER
   , client_id                       INTEGER
-  , CONSTRAINT PK_tb_order PRIMARY KEY ( id )
+  , CONSTRAINT PK_two_tb_order PRIMARY KEY ( id )
 );
 
-COMMENT ON TABLE  tb_order                                 IS 'Order table';
+COMMENT ON TABLE  tb_order                                 IS 'Order Table';
 
 CREATE SEQUENCE SQ_tb_order;
 
@@ -407,10 +379,9 @@ ALTER TABLE tb_client ADD CONSTRAINT FK_tb_client_tb_country FOREIGN KEY ( birth
 ALTER TABLE tb_client ADD CONSTRAINT FK_tb_client_tb_stuff FOREIGN KEY ( stuff_id ) REFERENCES tb_stuff ( id );
 ALTER TABLE tb_address ADD CONSTRAINT FK_tb_address_tb_client FOREIGN KEY ( client_id ) REFERENCES tb_client ( id );
 ALTER TABLE tb_address ADD CONSTRAINT FK_tb_address__address_type FOREIGN KEY ( type_id ) REFERENCES tb_address_type ( id );
-ALTER TABLE tb_address ADD CONSTRAINT FK_tb_address__address_type FOREIGN KEY ( type_id ) REFERENCES tb_address_type ( id );
 ALTER TABLE tb_address ADD CONSTRAINT FK_tb_address_tb_country FOREIGN KEY ( country_id ) REFERENCES tb_country ( id );
 ALTER TABLE additional_information ADD CONSTRAINT FK_l_information_tb_client FOREIGN KEY ( client_id ) REFERENCES tb_client ( id );
-ALTER TABLE tb_stuff ADD CONSTRAINT FK_tb_stuff_tb_position FOREIGN KEY ( position_id ) REFERENCES tb_position ( id );
+ALTER TABLE tb_stuff ADD CONSTRAINT FK_tb_two_stuff_tb_position FOREIGN KEY ( position_id ) REFERENCES tb_position ( id );
 ALTER TABLE tb_order ADD CONSTRAINT FK_tb_order_tb_order_type FOREIGN KEY ( type_id ) REFERENCES tb_order_type ( id );
 ALTER TABLE tb_order ADD CONSTRAINT FK_tb_order_tb_product FOREIGN KEY ( product_id ) REFERENCES tb_product ( id );
 ALTER TABLE tb_order ADD CONSTRAINT FK_tb_order_tb_client FOREIGN KEY ( client_id ) REFERENCES tb_client ( id );
