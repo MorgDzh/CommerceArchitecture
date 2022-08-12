@@ -45,21 +45,21 @@ DROP SEQUENCE SQ_tb_order_type;
 -------------------------------------------------------------------------------
 
 CREATE TABLE tb_client (
-    id                              INTEGER
-  , first_name_v                    VARCHAR2(200)
-  , birth_date_d                    INTEGER
-  , gender_id                       INTEGER
-  , nationality_id                  INTEGER
-  , birth_place_id                  INTEGER
+    id                              NUMBER
   , second_name_v                   VARCHAR2(200)
+  , first_name_v                    VARCHAR2(200)
   , surname_v                       VARCHAR2(200)
-  , stuff_id                        INTEGER
+  , birth_date_d                    DATE
+  , birth_place_id                  NUMBER
+  , gender_id                       NUMBER(4)
+  , nationality_id                  NUMBER
+  , stuff_id                        NUMBER
   , CONSTRAINT PK_tb_client PRIMARY KEY ( id )
 );
 
 COMMENT ON TABLE  tb_client                                 IS 'Table for storing clients';
 
-CREATE SEQUENCE SQ_tb_two_client;
+CREATE SEQUENCE SQ_tb_client;
 
 CREATE OR REPLACE TRIGGER TG_tb_client_BI
     BEFORE INSERT ON tb_client
@@ -71,21 +71,21 @@ BEGIN
 END;
 /
 
-
+;
 
 -------------------------------------------------------------------------------
 --            tb_address
 -------------------------------------------------------------------------------
 
 CREATE TABLE tb_address (
-    id                              INTEGER
-  , client_id                       INTEGER
-  , type_id                         INTEGER
+    id                              NUMBER
+  , type_id                         NUMBER
+  , client_id                       NUMBER
+  , country_id                      NUMBER
   , city_v                          VARCHAR2(200)
   , street_v                        VARCHAR2(200)
   , house_v                         VARCHAR2(200)
-  , flat_n                          INTEGER
-  , country_id                      INTEGER
+  , flat_n                          NUMBER
   , CONSTRAINT PK_tb_address PRIMARY KEY ( id )
 );
 
@@ -103,17 +103,19 @@ BEGIN
 END;
 /
 
+;
+
 -------------------------------------------------------------------------------
 --            tb_address_type
 -------------------------------------------------------------------------------
 
 CREATE TABLE tb_address_type (
-    id                              INTEGER
+    id                              NUMBER
   , name_v                          VARCHAR2(200)
   , CONSTRAINT PK_tb_address_type PRIMARY KEY ( id )
 );
 
-COMMENT ON TABLE  tb_address_type                                 IS 'Table of address types ';
+COMMENT ON TABLE  tb_address_type                                 IS 'Table of address types';
 
 CREATE SEQUENCE SQ_tb_address_type;
 
@@ -127,15 +129,15 @@ BEGIN
 END;
 /
 
-
+;
 
 -------------------------------------------------------------------------------
 --            additional_information
 -------------------------------------------------------------------------------
 
 CREATE TABLE additional_information (
-    id                              INTEGER
-  , client_id                       INTEGER
+    id                              NUMBER
+  , client_id                       NUMBER
   , phone_v                         VARCHAR2(200)
   , email_v                         VARCHAR2(200)
   , social_network_v                VARCHAR2(200)
@@ -156,14 +158,14 @@ BEGIN
 END;
 /
 
-
+;
 
 -------------------------------------------------------------------------------
 --            tb_country
 -------------------------------------------------------------------------------
 
 CREATE TABLE tb_country (
-    id                              INTEGER
+    id                              NUMBER
   , name_v                          VARCHAR2(200)
   , CONSTRAINT PK_tb_country PRIMARY KEY ( id )
 );
@@ -182,14 +184,15 @@ BEGIN
 END;
 /
 
+;
 
 -------------------------------------------------------------------------------
 --            tb_gender
 -------------------------------------------------------------------------------
 
 CREATE TABLE tb_gender (
-    id                              INTEGER
-  , name_v                          INTEGER
+    id                              NUMBER
+  , name_v                          NUMBER
   , CONSTRAINT PK_tb_gender PRIMARY KEY ( id )
 );
 
@@ -206,14 +209,14 @@ BEGIN
 END;
 /
 
-
+;
 
 -------------------------------------------------------------------------------
 --            tb_nationality
 -------------------------------------------------------------------------------
 
 CREATE TABLE tb_nationality (
-    id                              INTEGER
+    id                              NUMBER
   , name_v                          VARCHAR2(200)
   , CONSTRAINT PK_tb_nationality PRIMARY KEY ( id )
 );
@@ -231,23 +234,23 @@ BEGIN
 END;
 /
 
-
+;
 
 -------------------------------------------------------------------------------
 --            tb_stuff
 -------------------------------------------------------------------------------
 
 CREATE TABLE tb_stuff (
-    id                              INTEGER
+    id                              NUMBER
   , last_name_v                     VARCHAR2(200)
   , first_name_v                    VARCHAR2(200)
   , surname_v                       VARCHAR2(200)
-  , salary_n                        INTEGER
-  , position_id                     INTEGER
-  , CONSTRAINT PK_two_tb_stuff PRIMARY KEY ( id )
+  , salary_n                        NUMBER
+  , position_id                     NUMBER
+  , CONSTRAINT PK_tb_stuff PRIMARY KEY ( id )
 );
 
-COMMENT ON TABLE  tb_stuff                                 IS 'Table stuff';
+COMMENT ON TABLE  tb_stuff                                 IS 'Stuff Table';
 
 CREATE SEQUENCE SQ_tb_stuff;
 
@@ -261,16 +264,16 @@ BEGIN
 END;
 /
 
-
+;
 
 -------------------------------------------------------------------------------
 --            tb_position
 -------------------------------------------------------------------------------
 
 CREATE TABLE tb_position (
-    id                              INTEGER
+    id                              NUMBER
   , name_v                          VARCHAR2(200)
-  , CONSTRAINT PK_two_tb_position PRIMARY KEY ( id )
+  , CONSTRAINT PK_tb_position PRIMARY KEY ( id )
 );
 
 COMMENT ON TABLE  tb_position                                 IS 'Position Stuff';
@@ -287,16 +290,16 @@ BEGIN
 END;
 /
 
-
+;
 
 -------------------------------------------------------------------------------
 --            tb_product
 -------------------------------------------------------------------------------
 
 CREATE TABLE tb_product (
-    id                              INTEGER
+    id                              NUMBER
   , name_v                          VARCHAR2(200)
-  , price_n                         INTEGER
+  , price_n                         NUMBER
   , CONSTRAINT PK_tb_product PRIMARY KEY ( id )
 );
 
@@ -314,19 +317,20 @@ BEGIN
 END;
 /
 
-
+;
 
 -------------------------------------------------------------------------------
 --            tb_order
 -------------------------------------------------------------------------------
 
 CREATE TABLE tb_order (
-    id                              INTEGER
-  , type_id                         INTEGER
-  , quantity_n                      INTEGER
-  , product_id                      INTEGER
-  , client_id                       INTEGER
-  , CONSTRAINT PK_two_tb_order PRIMARY KEY ( id )
+    id                              NUMBER
+  , type_id                         NUMBER
+  , quantity_n                      NUMBER
+  , product_id                      NUMBER
+  , client_id                       NUMBER
+  , date_d                          DATE
+  , CONSTRAINT PK_tb_order PRIMARY KEY ( id )
 );
 
 COMMENT ON TABLE  tb_order                                 IS 'Order Table';
@@ -343,15 +347,15 @@ BEGIN
 END;
 /
 
-
+;
 
 -------------------------------------------------------------------------------
 --            tb_order_type
 -------------------------------------------------------------------------------
 
 CREATE TABLE tb_order_type (
-    id                              INTEGER
-  , name_v                          INTEGER
+    id                              NUMBER
+  , name_v                          NUMBER
   , CONSTRAINT PK_tb_order_type PRIMARY KEY ( id )
 );
 
@@ -369,7 +373,7 @@ BEGIN
 END;
 /
 
-
+;
 
 -------------------------------------------------------------------------------
 
@@ -381,7 +385,7 @@ ALTER TABLE tb_address ADD CONSTRAINT FK_tb_address_tb_client FOREIGN KEY ( clie
 ALTER TABLE tb_address ADD CONSTRAINT FK_tb_address__address_type FOREIGN KEY ( type_id ) REFERENCES tb_address_type ( id );
 ALTER TABLE tb_address ADD CONSTRAINT FK_tb_address_tb_country FOREIGN KEY ( country_id ) REFERENCES tb_country ( id );
 ALTER TABLE additional_information ADD CONSTRAINT FK_l_information_tb_client FOREIGN KEY ( client_id ) REFERENCES tb_client ( id );
-ALTER TABLE tb_stuff ADD CONSTRAINT FK_tb_two_stuff_tb_position FOREIGN KEY ( position_id ) REFERENCES tb_position ( id );
+ALTER TABLE tb_stuff ADD CONSTRAINT FK_tb_stuff_tb_position FOREIGN KEY ( position_id ) REFERENCES tb_position ( id );
 ALTER TABLE tb_order ADD CONSTRAINT FK_tb_order_tb_order_type FOREIGN KEY ( type_id ) REFERENCES tb_order_type ( id );
 ALTER TABLE tb_order ADD CONSTRAINT FK_tb_order_tb_product FOREIGN KEY ( product_id ) REFERENCES tb_product ( id );
 ALTER TABLE tb_order ADD CONSTRAINT FK_tb_order_tb_client FOREIGN KEY ( client_id ) REFERENCES tb_client ( id );
